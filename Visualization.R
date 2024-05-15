@@ -1,12 +1,12 @@
 #### Visualization ####
+### Different plot types ###
 
 library("ggplot2")
 
 
-plotMA(res, ylim=c(-6,10),
+plotMA(res05, ylim=c(-6,10),
        main = "MAplot-0.05",
        xlab= "basemean", ylab="LogFC", 
-       alpha = 0.05,
        colNonSig = "grey", colSig = "red", colLine = "black")
 
 plotMA(res, ylim=c(-6,10),
@@ -42,7 +42,6 @@ EnhancedVolcano(res,
 
 # MA plot2
 
-library("ggplot2")
 library("ggrepel")
 resdata=data.frame(res)
 head(resdata)
@@ -55,3 +54,40 @@ ggplot(resdata, aes(x = log2baseMean, y = log2FoldChange)) +
   scale_color_gradient(low="red", high="green")+
   geom_text_repel(aes(label=ifelse(log2FoldChange>4,as.character(gene),'')),hjust=0.5,vjust=0.5,size=3)+
   geom_text_repel(aes(label=ifelse(log2FoldChange<4*(-1),as.character(gene),'')),hjust=0,vjust=0,size=3)
+
+
+# Set up the side-by-side plot array
+par(mfrow=c(1,2))
+# par(mfrow=c(1,1))
+
+plot(x=res01$log2FoldChange,y=res01$baseMean, 
+     main="Original representation", 
+     xlab="Log2FoldChange", ylab="baseMean",
+     col="blue")
+
+
+# Second plot: log-log plot of log2FoldChange vs. baseMean
+plot(x=res01$log2FoldChange,y=res01$baseMean,
+     log="xy",
+     main = "Log-log plot",
+     xlab="Log2FoldChange", ylab="baseMean",
+     col = "red")
+
+
+# Create a histogram of counts with hist()
+baseMean= res01$baseMean[res01$ baseMean>100]
+hist(baseMean,
+     freq = F,
+     breaks = 5,
+     main="hist of baseMean",
+     xlab = "baseMean", ylab = "Density",
+     col = "green")
+
+lines(density(baseMean), col = "red")
+
+
+#pdf
+pdf(file="res05$log2FC.pdf")
+hist(res05$log2FoldChange, col = "violet", 
+     xlab = "Log2FC", ylab = "Frequency")
+dev.off()
