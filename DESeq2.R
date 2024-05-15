@@ -23,13 +23,11 @@ library("tidyverse")
 library("DESeq2")
 
 # Set the working directory
-directory <- "G:/My_Project"
+directory <- "E:/Bioinformatics/GitHub"
 setwd(directory)
 files <- list.files()
 sampleNames <- sub(".counts", "", files)
-sampleGroup<- factor(c(rep("Cancer",9),rep("Normal",10),rep("Cancer",4)
-                       ,rep("Normal",5),rep("Cancer",1),rep("Cancer",5)
-                       ,rep("Normal",3)))
+sampleGroup<- factor(c(rep("Cancer",19),rep("Normal",18)))
 
 sampletable<- data.frame(sample = sampleNames,
                          files = files,
@@ -62,6 +60,9 @@ resultsNames(dds)
 # Filter results by adjusted p value
 res05 = subset(res, padj<0.05)
 head(res05)
+
+res01 = subset(res, padj<0.01)
+head(res01)
 
 # Save data results and normalized reads to a csv file
 resdata <- merge(as.data.frame(res05),
